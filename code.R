@@ -49,3 +49,14 @@ hist(Grouped_data$total_steps, xlab = "Steps", main = "Total Daily Steps", col =
 print(paste("Mean number of steps taken daily", mean(Grouped_data$total_steps)))
 print(paste("Median number of steps taken daily", median(Grouped_data$total_steps)))
 
+### Difference between activity patterns of weekdays and weekends
+
+activity_data$date <- as.Date(as.character(activity_data$date))
+activity_data$weekday <- weekdays(activity_data$date)
+activity_data$weekend <- ifelse (activity_data$weekday == "Saturday" | activity_data$weekday == "Sunday", "Weekend", "Weekday")
+Grouped_data <- aggregate(activity_data$steps, by = list(activity_data$weekend, activity_data$interval), mean)
+names(Grouped_data) <- c("Weekend", "Interval", "Steps")
+ggplot(Grouped_data, aes(x = Interval, y=Steps, color=Weekend)) +
+  geom_line() +
+  facet_grid(Weekend ~ .) +
+  labs(title = "Mean of Steps by Interval", x = "interval", y = "steps")
