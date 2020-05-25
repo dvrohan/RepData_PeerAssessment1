@@ -1,40 +1,21 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+### Checking if file exists
 
-
-## Loading and preprocessing the data
-```{r , echo = TRUE}
 if(!file.exists("activity.csv")){
   unzip("activity.zip")
 }
+
+### Loading data and processing data
+
 activity_data <- read.csv("activity.csv")
 activity_data <- activity_data[!is.na(activity_data[,"steps"]),]
 activity_data$date <- as.Date(as.character(activity_data$date))
 
-```
+### Histogram of number of steps per day
 
-
-## What is mean total number of steps taken per day?
-
-```{r, echo = TRUE}
 Grouped_data <- aggregate(activity_data$steps, by = list(activity_data$date), sum)
 names(Grouped_data) <- c("date", "total_steps")
 
 hist(Grouped_data$total_steps, xlab = "Steps", main = "Total Daily Steps", col = "steelblue")
+
 print(paste("Mean number of steps taken daily", mean(Grouped_data$total_steps)))
 print(paste("Median number of steps taken daily", median(Grouped_data$total_steps)))
-```
-
-## What is the average daily activity pattern?
-
-
-
-## Imputing missing values
-
-
-
-## Are there differences in activity patterns between weekdays and weekends?
