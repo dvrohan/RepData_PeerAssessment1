@@ -31,3 +31,21 @@ ggplot(Mean_Data_By_Interval, aes(x = interval, y=steps)) +
 
 maxInterval <- Mean_Data_By_Interval[which.max(Mean_Data_By_Interval$steps),]
 maxInterval
+
+### Imputing Missing values 
+
+activity_data <- read.csv("activity.csv")
+missing_values <- is.na(activity_data$steps)
+print(paste("Number of Missing values are", sum(missing_values)))
+
+clean_activity_data <- activity_data[!missing_values,]
+mean_values <- tapply(clean_activity_data$steps, clean_activity_data$interval, mean, na.rm=TRUE, simplify=TRUE)
+activity_data$steps[missing_values] <- mean_values[as.character(activity_data$interval[missing_values])]
+print(paste("Number of Missing values after imputing", sum(is.na(activity_data$steps))))
+
+Grouped_data <- aggregate(activity_data$steps, by = list(activity_data$date), sum)
+names(Grouped_data) <- c("Date", "total_steps")
+hist(Grouped_data$total_steps, xlab = "Steps", main = "Total Daily Steps", col = "steelblue")
+print(paste("Mean number of steps taken daily", mean(Grouped_data$total_steps)))
+print(paste("Median number of steps taken daily", median(Grouped_data$total_steps)))
+
